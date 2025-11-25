@@ -1,2 +1,0 @@
-[console_scripts]
-gatewaysscan = gatewaysscan.cli:cli
