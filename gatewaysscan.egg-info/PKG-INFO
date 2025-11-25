@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: gatewaysscan
+Version: 0.1.0
+Summary: A futuristic CLI tool for scanning websites for server and payment gateway information.
+Author-email: Diwazz <diwazz@example.com>
+Project-URL: Homepage, https://github.com/GunYamazakii/Stripe-Charge
+Project-URL: Bug Tracker, https://github.com/GunYamazakii/Stripe-Charge/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Development Status :: 3 - Alpha
+Classifier: Topic :: Security
+Classifier: Topic :: Internet :: WWW/HTTP
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: requests
+Requires-Dist: beautifulsoup4
+Requires-Dist: click
+Requires-Dist: rich

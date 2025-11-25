@@ -1,0 +1,9 @@
+pyproject.toml
+gatewaysscan/__init__.py
+gatewaysscan/cli.py
+gatewaysscan.egg-info/PKG-INFO
+gatewaysscan.egg-info/SOURCES.txt
+gatewaysscan.egg-info/dependency_links.txt
+gatewaysscan.egg-info/entry_points.txt
+gatewaysscan.egg-info/requires.txt
+gatewaysscan.egg-info/top_level.txt
