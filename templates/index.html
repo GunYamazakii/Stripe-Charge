@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe CC Checker - Khatarnak UI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary-color: #6200EE;
+            --secondary-color: #03DAC6;
+            --background-color: #121212;
+            --surface-color: #1E1E1E;
+            --text-color: #E0E0E0;
+            --success-color: #4CAF50;
+            --error-color: #F44336;
+            --warning-color: #FFC107;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--surface-color);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #2C2C2C;
+            color: var(--text-color);
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: #7C4DFF;
+        }
+
+        button:active {
+            transform: scale(0.99);
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 100px;
+            background-color: #2C2C2C;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            border-left: 5px solid var(--secondary-color);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .result-box.approved {
+            border-left-color: var(--success-color);
+        }
+
+        .result-box.declined {
+            border-left-color: var(--error-color);
+        }
+
+        .result-box.error {
+            border-left-color: var(--warning-color);
+        }
+
+        .rate-limit-info {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #AAAAAA;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Stripe CC Checker</h1>
+        <p class="subtitle">Enter CC details in the format: CARD|MM|YY|CVV</p>
+
+        <div class="input-group">
+            <label for="cc-input">Credit Card Details</label>
+            <input type="text" id="cc-input" placeholder="e.g., 5518277061394423|03|29|562">
+        </div>
+
+        <button id="check-button">CHECK CARD</button>
+        <div class="loading-spinner" id="loading-spinner"></div>
+
+        <div class="result-box" id="result-box">
+            Your results will appear here.
+        </div>
+
+        <p class="rate-limit-info" id="rate-limit-info">
+            You have 5 checks remaining for this hour.
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ccInput = document.getElementById('cc-input');
+            const checkButton = document.getElementById('check-button');
+            const resultBox = document.getElementById('result-box');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const rateLimitInfo = document.getElementById('rate-limit-info');
+
+            // Function to update the rate limit display
+            function updateRateLimit(remaining) {
+                rateLimitInfo.textContent = `You have ${remaining} checks remaining for this hour.`;
+            }
+
+            // Initial check to get remaining count (optional, but good practice)
+            // We'll rely on the response for simplicity in this initial version.
+            updateRateLimit(5); // Start with 5 as per the requirement
+
+            checkButton.addEventListener('click', async () => {
+                const ccDetails = ccInput.value.trim();
+                if (!ccDetails) {
+                    resultBox.textContent = "Please enter CC details.";
+                    resultBox.className = 'result-box error';
+                    return;
+                }
+
+                // Basic format validation (CARD|MM|YY|CVV)
+                if (ccDetails.split('|').length !== 4) {
+                    resultBox.textContent = "Invalid format. Please use CARD|MM|YY|CVV.";
+                    resultBox.className = 'result-box error';
+                    return;
+                }
+
+                // UI State: Loading
+                checkButton.disabled = true;
+                checkButton.textContent = 'Checking...';
+                loadingSpinner.style.display = 'block';
+                resultBox.textContent = 'Processing request...';
+                resultBox.className = 'result-box';
+
+                try {
+                    const response = await fetch(`/stripe/cc?cc=${encodeURIComponent(ccDetails)}`);
+                    const data = await response.json();
+
+                    // UI State: Result
+                    loadingSpinner.style.display = 'none';
+                    checkButton.disabled = false;
+                    checkButton.textContent = 'CHECK CARD';
+
+                    if (data.status === 'rate_limited') {
+                        resultBox.textContent = data.message;
+                        resultBox.className = 'result-box error';
+                        updateRateLimit(data.remaining);
+                    } else if (data.status === 'error') {
+                        resultBox.textContent = data.message;
+                        resultBox.className = 'result-box error';
+                    } else {
+                        // Success or Decline (from mock function)
+                        resultBox.textContent = data.result;
+                        resultBox.className = `result-box ${data.status}`; // 'approved' or 'declined'
+                        updateRateLimit(data.remaining_checks);
+                    }
+
+                } catch (error) {
+                    // UI State: Error
+                    loadingSpinner.style.display = 'none';
+                    checkButton.disabled = false;
+                    checkButton.textContent = 'CHECK CARD';
+                    resultBox.textContent = `An unexpected error occurred: ${error.message}`;
+                    resultBox.className = 'result-box error';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

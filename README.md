@@ -1,86 +1,104 @@
-# 🌌 GatewaysScan: Quantum Web Reconnaissance CLI 🌌
+# ⚡ Stripe CC Checker - Khatarnak Edition
 
-[![PyPI version](https://badge.fury.io/py/gatewaysscan.svg)](https://badge.fury.io/py/gatewaysscan)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
+This is a full-stack web application built with **Flask** and a stylish, responsive frontend, designed to simulate a credit card checking service.
 
-## 🚀 Project Genesis
+**⚠️ IMPORTANT NOTE ON FUNCTIONALITY ⚠️**
 
-The **GatewaysScan** CLI is a next-generation tool designed for rapid, non-intrusive web reconnaissance. It leverages advanced pattern matching and HTTP header analysis to instantly identify the underlying server infrastructure and, critically, the presence of major payment gateway integrations on any target URL.
+Due to security and ethical guidelines, this application uses a **simulated (mocked) card check function**. It does **NOT** connect to the live Stripe API or any other payment gateway. The application is a fully functional template with a stylish UI, rate limiting, and API structure, allowing you to easily integrate your own **authorized and compliant** payment processing logic.
 
-This project transforms the original `Stripe-Charge` repository into a powerful, open-source utility, aligning with the future of digital security and development.
+## ✨ Features
 
-## ✨ Futuristic Feature Matrix
+*   **Khatarnak UI/UX:** A dark-themed, modern, and responsive interface built with pure HTML/CSS/JS.
+*   **Simulated API:** A fully structured API endpoint (`/stripe/cc`) that returns results in the exact format requested.
+*   **Rate Limiting:** Implements a simple, in-memory rate limit of **5 checks per hour** per user IP address.
+*   **Deployment Ready:** Includes `requirements.txt` for easy deployment on platforms like Render.
 
-| Feature | Description | Status |
+## 🚀 Quick Start (Deployment on Render)
+
+### 1. Clone the Repository
+
+First, ensure you have cloned this repository to your local machine.
+
+\`\`\`bash
+git clone https://github.com/GunYamazakii/Stripe-Charge.git
+cd Stripe-Charge
+\`\`\`
+
+### 2. Deploy to Render
+
+Render makes deploying Flask applications simple.
+
+1.  **Create a new Web Service** on Render.
+2.  **Connect to your GitHub repository** (this one).
+3.  **Configuration:**
+    *   **Name:** `stripe-cc-checker` (or any name you choose)
+    *   **Region:** Choose the region closest to you.
+    *   **Branch:** `main` (or your preferred branch)
+    *   **Root Directory:** (Leave blank)
+    *   **Runtime:** **Python 3**
+    *   **Build Command:** `pip install -r requirements.txt`
+    *   **Start Command:** `gunicorn app:app`
+
+Render will automatically detect the Flask application and deploy it. Your API will be live at the URL provided by Render (e.g., `my.api.onrender.com`).
+
+## 💻 Local Development
+
+1.  **Install Dependencies:**
+    \`\`\`bash
+    pip install -r requirements.txt
+    \`\`\`
+
+2.  **Run the Application:**
+    \`\`\`bash
+    python app.py
+    \`\`\`
+
+3.  **Access:** Open your browser to `http://127.0.0.1:5000/`.
+
+## ⚙️ API Endpoint
+
+The card check is performed via a simple GET request:
+
+| Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| **Server Fingerprinting** | Extracts and reports server software, X-Powered-By headers, and other infrastructure metadata. | ✅ Operational |
-| **Payment Gateway Detection** | Scans for known identifiers (API keys, script URLs) for major gateways like Stripe, PayPal, Square, and more. | ✅ Operational |
-| **Rich CLI Output** | Utilizes the `rich` library for a visually stunning, futuristic, and color-coded terminal experience. | ✅ Operational |
-| **Dependency-Light** | Built on standard Python libraries (`requests`, `click`, `rich`) for fast, reliable execution. | ✅ Operational |
+| \`GET\` | \`/stripe/cc?cc={CC|MM|YY|CVV}\` | Checks the card details. |
 
-## ⚙️ Installation: Initiating the Module
+**Example Request:**
 
-GatewaysScan is designed to be installed globally via `pip`, making it instantly accessible from any terminal session.
+\`\`\`
+GET /stripe/cc?cc=5518277061394423|03|29|562
+\`\`\`
 
-```bash
-# Ensure you have Python 3.8+
-pip install gatewaysscan
-```
+## 📝 Result Format
 
-## 💻 Usage: Executing the Scan Protocol
+The API returns a JSON object. The frontend then formats the result into the requested style:
 
-To initiate a scan, simply pass the target URL as an argument to the `gatewaysscan` command. The tool automatically handles protocol prefixes (`http://` or `https://`).
+| Field | Example Value |
+| :--- | :--- |
+| **Status** | \`Approved ✅\` or \`Declined ❌\` |
+| **Card** | \`5518277061394423|03|29|562\` |
+| **Gateway** | \`Stripe Charge 10$\` |
+| **Response** | \`Approved! Transaction successful.\` |
+| **Info** | \`DEBIT - CLASSIC\` |
+| **Issuer** | \`KHALEEJI COMMERCIAL BANK BSC\` |
+| **Country** | \`BAHRAIN 🇧🇭\` |
+| **Time** | \`7.14 seconds\` |
 
-```bash
-# Scan a target website
-gatewaysscan https://www.example.com
-```
+## 💡 Integrating Real Stripe Logic
 
-### 📡 Animated Scan Sequence (Simulated)
+The core logic is in the `mock_card_check` function in `app.py`. To integrate your own authorized Stripe logic, you would replace the contents of this function with your actual API calls.
 
-The CLI provides a dynamic, real-time feel to the analysis process:
+\`\`\`python
+def mock_card_check(cc_details):
+    # --- START: Replace this entire block with your authorized Stripe logic ---
+    # 1. Parse CC details
+    # 2. Make API call to Stripe (e.g., create a PaymentMethod, then a PaymentIntent)
+    # 3. Handle the response (success/failure)
+    # 4. Format the result string
+    # --- END: Replace this entire block ---
+    pass # Your new logic here
+\`\`\`
 
-```
-[00:00:01] █▒▒▒▒▒▒▒▒▒ Initializing Quantum HTTP Handshake...
-[00:00:02] ████▒▒▒▒▒▒ Analyzing Header Signatures...
-[00:00:03] ███████▒▒▒ Cross-referencing Gateway Database...
-[00:00:04] ██████████ Report Generation Complete.
-```
+## 💖 Donation Name
 
-## 📊 Sample Output (Rich CLI)
-
-The output is structured into high-contrast panels for maximum readability and information density.
-
-```
-╭──────────────────────────────────────────────────────────────────────────────╮
-│                 [bold white on blue]GATEWAY SCAN REPORT[/bold white on blue]                  │
-├──────────────────────────────────────────────────────────────────────────────┤
-│ [bold cyan]Server Information[/bold cyan]                                     │
-│ ╭──────────────────────┬───────────────────────────────────────────────────╮ │
-│ │ Attribute            │ Value                                             │ │
-│ ├──────────────────────┼───────────────────────────────────────────────────┤ │
-│ │ Target URL           │ https://stripe.com                                │ │
-│ │ Status Code          │ 200                                               │ │
-│ │ Server Software      │ cloudflare                                        │ │
-│ │ Content-Type         │ text/html; charset=utf-8                          │ │
-│ │ X-Powered-By         │ N/A                                               │ │
-│ ╰──────────────────────┴───────────────────────────────────────────────────╯ │
-╰──────────────────────────────────────────────────────────────────────────────╯
-╭──────────────────────────────────────────────────────────────────────────────╮
-│             [bold white on green]PAYMENT GATEWAY ANALYSIS[/bold white on green]             │
-├──────────────────────────────────────────────────────────────────────────────┤
-│        [bold green]GATEWAYS DETECTED:[/bold green] Stripe, PayPal, Braintree        │
-╰──────────────────────────────────────────────────────────────────────────────╯
-```
-
-## 👤 Author and Contribution
-
-This project is maintained and enhanced by the community, with initial development driven by **@diwazz**.
-
-*   **Author:** @diwazz
-*   **Repository:** [GunYamazakii/Stripe-Charge](https://github.com/GunYamazakii/Stripe-Charge)
-
-## 📜 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+As requested, the donation name is set to: **Stripe Charge 10$**
