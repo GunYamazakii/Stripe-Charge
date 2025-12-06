@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stripe CC Checker - Khatarnak UI</title>
+    <title>⚡ Stripe CC Checker - KHATARNAK EDITION</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap');
 
         :root {
-            --primary-color: #6200EE;
-            --secondary-color: #03DAC6;
-            --background-color: #121212;
-            --surface-color: #1E1E1E;
+            --primary-color: #00FFC0; /* Neon Green */
+            --secondary-color: #FF0077; /* Neon Pink */
+            --background-color: #0A0A0A; /* Deep Black */
+            --surface-color: #1A1A1A; /* Dark Gray */
             --text-color: #E0E0E0;
-            --success-color: #4CAF50;
-            --error-color: #F44336;
-            --warning-color: #FFC107;
+            --success-color: #00FFC0;
+            --error-color: #FF0077;
+            --warning-color: #FFD700;
         }
 
         * {
@@ -25,7 +25,7 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto Mono', monospace;
             background-color: var(--background-color);
             color: var(--text-color);
             display: flex;
@@ -33,160 +33,202 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            overflow: hidden;
+            /* Background Grid Effect */
+            background-image: linear-gradient(to right, var(--surface-color) 1px, transparent 1px),
+                              linear-gradient(to bottom, var(--surface-color) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
 
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             background-color: var(--surface-color);
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 1s ease-in-out;
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--secondary-color);
+            border: 2px solid var(--primary-color);
+            position: relative;
+            z-index: 10;
+            animation: pulseBorder 5s infinite alternate;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes pulseBorder {
+            0% { border-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--secondary-color); }
+            100% { border-color: var(--secondary-color); box-shadow: 0 0 20px var(--secondary-color), 0 0 40px var(--primary-color); }
         }
 
         h1 {
+            font-family: 'Orbitron', sans-serif;
             text-align: center;
             color: var(--primary-color);
             margin-bottom: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-shadow: 0 0 5px var(--primary-color);
         }
 
         .subtitle {
             text-align: center;
-            color: var(--text-color);
+            color: var(--secondary-color);
             margin-bottom: 30px;
-            font-weight: 300;
+            font-weight: 400;
+            text-shadow: 0 0 3px var(--secondary-color);
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
         }
 
         input[type="text"] {
             width: 100%;
             padding: 15px;
-            border: none;
-            border-radius: 8px;
-            background-color: #2C2C2C;
+            border: 2px solid var(--secondary-color);
+            border-radius: 5px;
+            background-color: #000000;
             color: var(--text-color);
-            font-size: 16px;
-            transition: border-color 0.3s;
+            font-size: 18px;
+            font-family: 'Roboto Mono', monospace;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         input[type="text"]:focus {
             outline: none;
-            box-shadow: 0 0 0 3px var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
         }
 
         button {
             width: 100%;
             padding: 15px;
-            background-color: var(--primary-color);
-            color: white;
+            background-color: var(--secondary-color);
+            color: var(--background-color);
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 700;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: 900;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
+            transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px var(--secondary-color);
         }
 
         button:hover {
-            background-color: #7C4DFF;
+            background-color: var(--primary-color);
+            box-shadow: 0 0 15px var(--primary-color);
+            color: var(--background-color);
         }
 
         button:active {
-            transform: scale(0.99);
+            transform: scale(0.98);
         }
 
         button:disabled {
             background-color: #555;
+            box-shadow: none;
             cursor: not-allowed;
         }
 
         .result-box {
             margin-top: 30px;
             padding: 20px;
-            border-radius: 8px;
-            min-height: 100px;
-            background-color: #2C2C2C;
+            border-radius: 5px;
+            min-height: 150px;
+            background-color: #000000;
             white-space: pre-wrap;
-            font-family: monospace;
+            font-family: 'Roboto Mono', monospace;
             font-size: 14px;
-            line-height: 1.6;
-            border-left: 5px solid var(--secondary-color);
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+            line-height: 1.8;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            overflow-x: auto;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .result-box.approved {
             border-left-color: var(--success-color);
+            box-shadow: 0 0 10px var(--success-color);
         }
 
         .result-box.declined {
             border-left-color: var(--error-color);
+            box-shadow: 0 0 10px var(--error-color);
         }
 
         .result-box.error {
             border-left-color: var(--warning-color);
+            box-shadow: 0 0 10px var(--warning-color);
         }
 
         .rate-limit-info {
             text-align: center;
             margin-top: 15px;
             font-size: 14px;
-            color: #AAAAAA;
+            color: var(--primary-color);
+            text-shadow: 0 0 2px var(--primary-color);
         }
 
         .loading-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid var(--secondary-color);
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--primary-color);
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
+            width: 30px;
+            height: 30px;
+            animation: spin 0.8s linear infinite;
             display: none;
-            margin: 0 auto;
+            margin: 15px auto 0;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Result Text Styling for better readability */
+        .result-box strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        .result-box .declined-text {
+            color: var(--error-color);
+        }
+        .result-box .approved-text {
+            color: var(--success-color);
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>⚡ Stripe CC Checker</h1>
-        <p class="subtitle">Enter CC details in the format: CARD|MM|YY|CVV</p>
+        <h1>⚡ STRIPE CC CHECKER</h1>
+        <p class="subtitle">ENTER CARD DETAILS FOR SYSTEM SCAN</p>
 
         <div class="input-group">
-            <label for="cc-input">Credit Card Details</label>
+            <label for="cc-input">CARD | MM | YY | CVV</label>
             <input type="text" id="cc-input" placeholder="e.g., 5518277061394423|03|29|562">
         </div>
 
-        <button id="check-button">CHECK CARD</button>
+        <button id="check-button">INITIATE SCAN</button>
         <div class="loading-spinner" id="loading-spinner"></div>
 
         <div class="result-box" id="result-box">
-            Your results will appear here.
+            <span style="color: var(--secondary-color);">SYSTEM READY:</span> Awaiting input for card validation sequence.
         </div>
 
         <p class="rate-limit-info" id="rate-limit-info">
-            You have 5 checks remaining for this hour.
+            SCAN LIMIT: 5/HOUR. 5 checks remaining.
         </p>
     </div>
 
@@ -200,33 +242,31 @@
 
             // Function to update the rate limit display
             function updateRateLimit(remaining) {
-                rateLimitInfo.textContent = `You have ${remaining} checks remaining for this hour.`;
+                rateLimitInfo.textContent = `SCAN LIMIT: 5/HOUR. ${remaining} checks remaining.`;
             }
 
-            // Initial check to get remaining count (optional, but good practice)
-            // We'll rely on the response for simplicity in this initial version.
-            updateRateLimit(5); // Start with 5 as per the requirement
+            updateRateLimit(5); // Initial value
 
             checkButton.addEventListener('click', async () => {
                 const ccDetails = ccInput.value.trim();
                 if (!ccDetails) {
-                    resultBox.textContent = "Please enter CC details.";
+                    resultBox.innerHTML = `<span style="color: var(--warning-color);">ERROR:</span> Input field cannot be empty.`;
                     resultBox.className = 'result-box error';
                     return;
                 }
 
                 // Basic format validation (CARD|MM|YY|CVV)
                 if (ccDetails.split('|').length !== 4) {
-                    resultBox.textContent = "Invalid format. Please use CARD|MM|YY|CVV.";
+                    resultBox.innerHTML = `<span style="color: var(--warning-color);">ERROR:</span> Invalid format. Use CARD|MM|YY|CVV.`;
                     resultBox.className = 'result-box error';
                     return;
                 }
 
                 // UI State: Loading
                 checkButton.disabled = true;
-                checkButton.textContent = 'Checking...';
+                checkButton.textContent = 'SCANNING... PLEASE WAIT';
                 loadingSpinner.style.display = 'block';
-                resultBox.textContent = 'Processing request...';
+                resultBox.innerHTML = `<span style="color: var(--primary-color);">PROCESSING:</span> Initiating validation sequence...`;
                 resultBox.className = 'result-box';
 
                 try {
@@ -236,18 +276,23 @@
                     // UI State: Result
                     loadingSpinner.style.display = 'none';
                     checkButton.disabled = false;
-                    checkButton.textContent = 'CHECK CARD';
+                    checkButton.textContent = 'INITIATE SCAN';
 
                     if (data.status === 'rate_limited') {
-                        resultBox.textContent = data.message;
+                        resultBox.innerHTML = `<span style="color: var(--error-color);">RATE LIMIT EXCEEDED:</span> ${data.message}`;
                         resultBox.className = 'result-box error';
                         updateRateLimit(data.remaining);
                     } else if (data.status === 'error') {
-                        resultBox.textContent = data.message;
+                        resultBox.innerHTML = `<span style="color: var(--error-color);">SYSTEM ERROR:</span> ${data.message}`;
                         resultBox.className = 'result-box error';
                     } else {
                         // Success or Decline (from mock function)
-                        resultBox.textContent = data.result;
+                        let formattedResult = data.result
+                            .replace('**DECLINED ❌**', '<strong class="declined-text">DECLINED ❌</strong>')
+                            .replace('**APPROVED ✅**', '<strong class="approved-text">APPROVED ✅</strong>')
+                            .replace(/(\b[A-Z]{2,}\b):/g, '<span style="color: var(--secondary-color);">$1:</span>');
+
+                        resultBox.innerHTML = formattedResult;
                         resultBox.className = `result-box ${data.status}`; // 'approved' or 'declined'
                         updateRateLimit(data.remaining_checks);
                     }
@@ -256,8 +301,8 @@
                     // UI State: Error
                     loadingSpinner.style.display = 'none';
                     checkButton.disabled = false;
-                    checkButton.textContent = 'CHECK CARD';
-                    resultBox.textContent = `An unexpected error occurred: ${error.message}`;
+                    checkButton.textContent = 'INITIATE SCAN';
+                    resultBox.innerHTML = `<span style="color: var(--error-color);">NETWORK ERROR:</span> Could not connect to API.`;
                     resultBox.className = 'result-box error';
                 }
             });
